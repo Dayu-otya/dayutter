@@ -1,0 +1,344 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+#app {
+  display: grid;
+  grid-template-columns: 220px 1fr 240px;
+  min-height: 600px;
+  max-width: 960px;
+  margin: 0 auto;
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  background: var(--color-background-primary);
+}
+#sidebar {
+  border-right: 0.5px solid var(--color-border-tertiary);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--color-background-secondary);
+}
+.logo { font-size: 20px; font-weight: 500; color: var(--color-text-primary); padding: 0 0.5rem 1rem; letter-spacing: -0.5px; }
+.logo span { color: #1D9E75; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border-radius: var(--border-radius-md); cursor: pointer; font-size: 14px;
+  color: var(--color-text-secondary); border: none; background: none; width: 100%; text-align: left;
+  transition: background 0.15s;
+}
+.nav-item:hover { background: var(--color-background-primary); color: var(--color-text-primary); }
+.nav-item.active { color: var(--color-text-primary); font-weight: 500; background: var(--color-background-primary); }
+.nav-item i { font-size: 18px; }
+.post-btn {
+  margin-top: auto; padding: 10px; background: #1D9E75; color: white; border: none;
+  border-radius: var(--border-radius-md); font-size: 14px; font-weight: 500; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.15s;
+}
+.post-btn:hover { background: #0F6E56; }
+#main { border-right: 0.5px solid var(--color-border-tertiary); display: flex; flex-direction: column; }
+.main-header {
+  padding: 1rem 1.25rem; border-bottom: 0.5px solid var(--color-border-tertiary);
+  font-size: 16px; font-weight: 500; background: var(--color-background-primary);
+}
+#compose { padding: 1rem 1.25rem; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; gap: 10px; }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0;
+}
+.compose-inner { flex: 1; }
+#compose-text {
+  width: 100%; border: none; outline: none; font-size: 15px; resize: none;
+  background: transparent; color: var(--color-text-primary); font-family: var(--font-sans); min-height: 60px;
+}
+#compose-text::placeholder { color: var(--color-text-tertiary); }
+.compose-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--color-border-tertiary);
+}
+.compose-tools { display: flex; gap: 4px; }
+.tool-btn {
+  background: none; border: none; padding: 6px; cursor: pointer; color: #1D9E75;
+  border-radius: var(--border-radius-md); font-size: 16px; transition: background 0.15s;
+}
+.tool-btn:hover { background: #E1F5EE; }
+.char-count { font-size: 12px; color: var(--color-text-tertiary); }
+.send-btn {
+  background: #1D9E75; color: white; border: none; padding: 7px 16px;
+  border-radius: 999px; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s;
+}
+.send-btn:hover { background: #0F6E56; }
+.send-btn:disabled { background: #9FE1CB; cursor: default; }
+#timeline { overflow-y: auto; flex: 1; }
+.post-card {
+  padding: 1rem 1.25rem; border-bottom: 0.5px solid var(--color-border-tertiary);
+  display: flex; gap: 10px; animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.post-body { flex: 1; }
+.post-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.post-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.post-handle { font-size: 13px; color: var(--color-text-tertiary); }
+.post-time { font-size: 12px; color: var(--color-text-tertiary); margin-left: auto; }
+.post-text { font-size: 14px; color: var(--color-text-primary); line-height: 1.6; margin-bottom: 10px; white-space: pre-wrap; }
+.post-actions { display: flex; align-items: center; gap: 12px; }
+.action-btn {
+  background: none; border: none; cursor: pointer; font-size: 13px; color: var(--color-text-tertiary);
+  display: flex; align-items: center; gap: 4px; padding: 4px;
+  border-radius: var(--border-radius-md); transition: color 0.15s, background 0.15s;
+}
+.action-btn:hover { color: #1D9E75; background: #E1F5EE; }
+.action-btn.liked { color: #D4537E; }
+.action-btn i { font-size: 15px; }
+.replies { border-top: 0.5px solid var(--color-border-tertiary); margin-top: 8px; padding-top: 8px; }
+.reply-item { display: flex; gap: 8px; margin-bottom: 8px; }
+.reply-avatar {
+  width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0;
+}
+.reply-name { font-size: 12px; font-weight: 500; color: var(--color-text-primary); }
+.reply-text { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; }
+#right-sidebar { padding: 1rem; display: flex; flex-direction: column; gap: 1rem; background: var(--color-background-secondary); }
+.sidebar-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem; }
+.sidebar-card h3 { font-size: 14px; font-weight: 500; margin-bottom: 10px; color: var(--color-text-primary); }
+.trend-item { padding: 6px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.trend-item:last-child { border-bottom: none; }
+.trend-tag { font-size: 13px; font-weight: 500; color: #0F6E56; }
+.trend-count { font-size: 11px; color: var(--color-text-tertiary); }
+.suggestion-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+.follow-btn {
+  margin-left: auto; border: 0.5px solid #1D9E75; color: #0F6E56; background: none;
+  padding: 4px 10px; border-radius: 999px; font-size: 11px; cursor: pointer; transition: background 0.15s;
+}
+.follow-btn:hover { background: #E1F5EE; }
+.follow-btn.following { background: #1D9E75; color: white; border-color: #1D9E75; }
+.sug-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.sug-handle { font-size: 11px; color: var(--color-text-tertiary); }
+.empty-state { padding: 2rem; text-align: center; color: var(--color-text-tertiary); font-size: 14px; }
+
+/* 返信モーダル風インライン */
+.reply-form { margin-top: 8px; display: flex; gap: 8px; }
+.reply-input {
+  flex: 1; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md);
+  padding: 6px 10px; font-size: 13px; outline: none; background: var(--color-background-secondary);
+  color: var(--color-text-primary); font-family: var(--font-sans);
+}
+.reply-submit {
+  background: #1D9E75; color: white; border: none; padding: 6px 12px;
+  border-radius: 999px; font-size: 12px; cursor: pointer;
+}
+.reply-submit:hover { background: #0F6E56; }
+</style>
+
+<h2 class="sr-only">だゆったー</h2>
+
+<div id="app">
+  <nav id="sidebar">
+    <div class="logo"><span>つぶやき</span></div>
+    <button class="nav-item active" onclick="setPage('home', this)"><i class="ti ti-home" aria-hidden="true"></i>ホーム</button>
+    <button class="nav-item" onclick="setPage('explore', this)"><i class="ti ti-search" aria-hidden="true"></i>さがす</button>
+    <button class="nav-item" onclick="setPage('notif', this)"><i class="ti ti-bell" aria-hidden="true"></i>通知</button>
+    <button class="nav-item" onclick="setPage('profile', this)"><i class="ti ti-user" aria-hidden="true"></i>プロフィール</button>
+    <button class="post-btn" onclick="focusCompose()"><i class="ti ti-pencil" aria-hidden="true"></i>投稿する</button>
+  </nav>
+
+  <main id="main">
+    <div class="main-header" id="page-title">ホーム</div>
+    <div id="compose">
+      <div class="avatar" style="background:#9FE1CB;color:#085041">だ</div>
+      <div class="compose-inner">
+        <textarea id="compose-text" placeholder="あるあるをメモ" rows="2" oninput="updateCompose()"></textarea>
+        <div class="compose-footer">
+          <div class="compose-tools">
+            <button class="tool-btn" title="画像"><i class="ti ti-photo" aria-hidden="true"></i></button>
+            <button class="tool-btn" title="ハッシュタグ" onclick="insertHash()"><i class="ti ti-hash" aria-hidden="true"></i></button>
+          </div>
+          <span class="char-count" id="char-count">0 / 140</span>
+          <button class="send-btn" id="send-btn" onclick="sendPost()" disabled>投稿</button>
+        </div>
+      </div>
+    </div>
+    <div id="timeline"></div>
+  </main>
+
+  <aside id="right-sidebar">
+    <div class="sidebar-card">
+      <h3>トレンド</h3>
+      <div id="trends"></div>
+    </div>
+    <div class="sidebar-card">
+      <h3>おすすめユーザー</h3>
+      <div id="suggestions"></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+const ME = { name: 'だゆ', handle: '@anata', initials: 'だ', avatarBg: '#9FE1CB', avatarFg: '#085041' };
+
+function loadPosts() {
+  try {
+    return JSON.parse(localStorage.getItem('posts') || '[]');
+  } catch { return []; }
+}
+
+function loadNextId() {
+  return parseInt(localStorage.getItem('nextId') || '10', 10);
+}
+
+let posts = loadPosts();
+let nextId = loadNextId();
+
+function savePosts() {
+  localStorage.setItem('posts', JSON.stringify(posts));
+  localStorage.setItem('nextId', String(nextId));
+}
+
+const TRENDS = [
+];
+const SUGGESTIONS = [
+];
+
+let replyOpen = null;
+let followStates = {};
+
+function esc(s) {
+  return s
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/\n/g,'<br>');
+}
+
+function renderTimeline() {
+  const el = document.getElementById('timeline');
+  if (!posts.length) { el.innerHTML = '<div class="empty-state">まだ投稿がありません</div>'; return; }
+  el.innerHTML = posts.map(p => {
+    const repliesHTML = p.replies.length
+      ? `<div class="replies">${p.replies.map(r => `
+          <div class="reply-item">
+            <div class="reply-avatar" style="background:${r.avatarBg};color:${r.avatarFg}">${r.initials}</div>
+            <div><div class="reply-name">${r.name}</div><p class="reply-text">${esc(r.text)}</p></div>
+          </div>`).join('')}</div>` : '';
+    const replyFormHTML = replyOpen === p.id
+      ? `<div class="reply-form">
+           <input class="reply-input" id="reply-input-${p.id}" placeholder="返信を入力..." />
+           <button class="reply-submit" onclick="submitReply(${p.id})">送信</button>
+         </div>` : '';
+    return `<div class="post-card" id="post-${p.id}">
+      <div class="avatar" style="background:${p.avatarBg};color:${p.avatarFg}">${p.initials}</div>
+      <div class="post-body">
+        <div class="post-header">
+          <span class="post-name">${p.name}</span>
+          <span class="post-handle">${p.handle}</span>
+          <span class="post-time">${p.time}</span>
+        </div>
+        <p class="post-text">${esc(p.text)}</p>
+        <div class="post-actions">
+          <button class="action-btn" onclick="toggleReply(${p.id})"><i class="ti ti-message-circle" aria-hidden="true"></i>${p.replies.length}</button>
+          <button class="action-btn" onclick="repost(${p.id})"><i class="ti ti-repeat" aria-hidden="true"></i>${p.reposts}</button>
+          <button class="action-btn ${p.liked?'liked':''}" onclick="likePost(${p.id})"><i class="ti ti-heart" aria-hidden="true"></i>${p.likes}</button>
+        </div>
+        ${repliesHTML}
+        ${replyFormHTML}
+      </div>
+    </div>`;
+  }).join('');
+  if (replyOpen !== null) {
+    const inp = document.getElementById(`reply-input-${replyOpen}`);
+    if (inp) inp.focus();
+  }
+}
+
+function renderTrends() {
+  document.getElementById('trends').innerHTML = TRENDS.map(t =>
+    `<div class="trend-item"><div class="trend-tag">${t.tag}</div><div class="trend-count">${t.count}</div></div>`
+  ).join('');
+}
+
+function renderSuggestions() {
+  document.getElementById('suggestions').innerHTML = SUGGESTIONS.map((s,i) => `
+    <div class="suggestion-item">
+      <div class="avatar" style="width:32px;height:32px;font-size:12px;background:${s.bg};color:${s.fg}">${s.initials}</div>
+      <div><div class="sug-name">${s.name}</div><div class="sug-handle">${s.handle}</div></div>
+      <button class="follow-btn ${followStates[i]?'following':''}" onclick="toggleFollow(this,${i})">${followStates[i]?'フォロー中':'フォロー'}</button>
+    </div>`).join('');
+}
+
+function toggleFollow(btn, i) {
+  followStates[i] = !followStates[i];
+  btn.textContent = followStates[i] ? 'フォロー中' : 'フォロー';
+  btn.classList.toggle('following', followStates[i]);
+}
+
+function updateCompose() {
+  const txt = document.getElementById('compose-text').value;
+  document.getElementById('char-count').textContent = `${txt.length} / 140`;
+  document.getElementById('send-btn').disabled = txt.trim().length === 0 || txt.length > 140;
+}
+
+function sendPost() {
+  const txt = document.getElementById('compose-text').value.trim();
+  if (!txt) return;
+  posts.unshift({ id: nextId++, name: ME.name, handle: ME.handle, initials: ME.initials,
+    avatarBg: ME.avatarBg, avatarFg: ME.avatarFg, text: txt, time: 'たった今', likes: 0, reposts: 0, liked: false, replies: [] });
+    savePosts();
+  document.getElementById('compose-text').value = '';
+  updateCompose();
+  renderTimeline();
+}
+
+function likePost(id) {
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  p.liked = !p.liked;
+  p.likes += p.liked ? 1 : -1;
+  savePosts();
+  renderTimeline();
+}
+
+function repost(id) {
+  const p = posts.find(x => x.id === id);
+  if (p) { p.reposts++; renderTimeline(); }
+}
+
+function toggleReply(id) {
+  replyOpen = replyOpen === id ? null : id;
+  renderTimeline();
+}
+
+function submitReply(id) {
+  const inp = document.getElementById(`reply-input-${id}`);
+  const txt = inp ? inp.value.trim() : '';
+  if (!txt) return;
+  const p = posts.find(x => x.id === id);
+  if (p) {
+    p.replies.push({ name: ME.name, handle: ME.handle, initials: ME.initials, avatarBg: ME.avatarBg, avatarFg: ME.avatarFg, text: txt });
+    savePosts();
+    replyOpen = null;
+    renderTimeline();
+  }
+}
+
+function focusCompose() { document.getElementById('compose-text').focus(); }
+
+function insertHash() {
+  const el = document.getElementById('compose-text');
+  el.value += ' #';
+  el.focus();
+  updateCompose();
+}
+
+function setPage(page, btn) {
+  const titles = { home: 'ホーム', explore: 'さがす', notif: '通知', profile: 'プロフィール' };
+  document.getElementById('page-title').textContent = titles[page];
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  btn.classList.add('active');
+  if (page === 'home') renderTimeline();
+  else document.getElementById('timeline').innerHTML = `<div class="empty-state">${titles[page]}ページは未実装（原型版）</div>`;
+}
+
+renderTimeline();
+renderTrends();
+renderSuggestions();
+</script>
