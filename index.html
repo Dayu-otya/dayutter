@@ -337,8 +337,20 @@ function setPage(page, btn) {
   if (page === 'home') renderTimeline();
   else document.getElementById('timeline').innerHTML = `<div class="empty-state">${titles[page]}ページは未実装（原型版）</div>`;
 }
-
 renderTimeline();
 renderTrends();
 renderSuggestions();
+  document.addEventListener('keydown', function(e) {
+  const active = document.activeElement;
+  const isTyping = active.tagName === 'TEXTAREA' || active.tagName === 'INPUT';
+
+  if ((e.key === 'n' || e.key === 'N') && !isTyping) {
+    e.preventDefault();
+    focusCompose();
+  }
+  if (e.key === 'Enter' && e.ctrlKey) {
+    e.preventDefault();
+    sendPost();
+  }
+});
 </script>
