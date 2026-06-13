@@ -274,7 +274,7 @@ function toggleFollow(btn, i) {
 function updateCompose() {
   const txt = document.getElementById('compose-text').value;
   document.getElementById('char-count').textContent = `${txt.length} / 140`;
-  document.getElementById('send-btn').disabled = txt.trim().length === 0 || txt.length > 140;
+  document.getElementById('send-btn').disabled = txt.trim().length === 0 ||
 }
 
 function sendPost() {
