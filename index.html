@@ -89,6 +89,7 @@
 }
 .action-btn:hover { color: #1D9E75; background: #E1F5EE; }
 .action-btn.liked { color: #D4537E; }
+.action-btn.delete:hover { color: #cc3333; background: #fdecea; }
 .action-btn i { font-size: 15px; }
 .replies { border-top: 0.5px solid var(--color-border-tertiary); margin-top: 8px; padding-top: 8px; }
 .reply-item { display: flex; gap: 8px; margin-bottom: 8px; }
@@ -234,11 +235,12 @@ function renderTimeline() {
           <span class="post-time">${p.time}</span>
         </div>
         <p class="post-text">${esc(p.text)}</p>
-        <div class="post-actions">
-          <button class="action-btn" onclick="toggleReply(${p.id})"><i class="ti ti-message-circle" aria-hidden="true"></i>${p.replies.length}</button>
-          <button class="action-btn" onclick="repost(${p.id})"><i class="ti ti-repeat" aria-hidden="true"></i>${p.reposts}</button>
-          <button class="action-btn ${p.liked?'liked':''}" onclick="likePost(${p.id})"><i class="ti ti-heart" aria-hidden="true"></i>${p.likes}</button>
-        </div>
+       <div class="post-actions">
+  <button class="action-btn" onclick="toggleReply(${p.id})"><i class="ti ti-message-circle" aria-hidden="true"></i>${p.replies.length}</button>
+  <button class="action-btn" onclick="repost(${p.id})"><i class="ti ti-repeat" aria-hidden="true"></i>${p.reposts}</button>
+  <button class="action-btn ${p.liked?'liked':''}" onclick="likePost(${p.id})"><i class="ti ti-heart" aria-hidden="true"></i>${p.likes}</button>
+  ${p.handle === ME.handle ? `<button class="action-btn delete" onclick="deletePost(${p.id})" title="削除"><i class="ti ti-trash" aria-hidden="true"></i></button>` : ''}
+</div>
         ${repliesHTML}
         ${replyFormHTML}
       </div>
@@ -297,9 +299,11 @@ function likePost(id) {
   renderTimeline();
 }
 
-function repost(id) {
-  const p = posts.find(x => x.id === id);
-  if (p) { p.reposts++; renderTimeline(); }
+function deletePost(id) {
+  if (!confirm('この投稿を削除しますか？')) return;
+  posts = posts.filter(x => x.id !== id);
+  savePosts();
+  renderTimeline();
 }
 
 function toggleReply(id) {
