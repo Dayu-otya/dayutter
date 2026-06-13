@@ -153,7 +153,7 @@
             <button class="tool-btn" title="画像"><i class="ti ti-photo" aria-hidden="true"></i></button>
             <button class="tool-btn" title="ハッシュタグ" onclick="insertHash()"><i class="ti ti-hash" aria-hidden="true"></i></button>
           </div>
-          <span class="char-count" id="char-count">0 / 140</span>
+          <span class="char-count" id="char-count">0 / 5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555</span>
           <button class="send-btn" id="send-btn" onclick="sendPost()" disabled>投稿</button>
         </div>
       </div>
@@ -273,8 +273,8 @@ function toggleFollow(btn, i) {
 
 function updateCompose() {
   const txt = document.getElementById('compose-text').value;
-  document.getElementById('char-count').textContent = `${txt.length} / 140`;
-  document.getElementById('send-btn').disabled = txt.trim().length === 0 ||txt.length > 140
+  document.getElementById('char-count').textContent = `${txt.length} / 5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555`;
+  document.getElementById('send-btn').disabled = txt.trim().length === 0 ||txt.length > 5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555
 }
 
 function sendPost() {
